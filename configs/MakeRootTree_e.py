@@ -212,6 +212,7 @@ class GetPart:
 
             # get the mean and stddev for this event
             if len(z_positions) != 0:
+                weighted_z = 0
                 ZAverage_w[0] = (w_av_z)
                 ZAv[0] = np.mean(z_positions)
                 ZWidth_w[0] = (w_std_z)

@@ -172,19 +172,22 @@ def main(args):
     ax.set_yscale('log')
     ax.set_ylabel('events per bin')
     ax.set_xlabel('angle between photons (radians)')
-    fig.savefig(f'./angles/angle_all{args.process}.pdf')
+    #fig.savefig(f'./angles/angle_all{args.process}.pdf')
 
     #electron angle
     fig, ax = plt.subplots(1,1)
     for i, data in enumerate(e_angles):
 
-        plt.title("Angle between photons")
+        plt.title("Angle of outgoing electron")
         n, bins, patches = ax.hist(e_angles[i],
-                                   bins=50,
-                                   #range=(-1,2*math.pi),
+                                   bins=40,
+                                   range=(0,math.pi),
                                    histtype = 'step',
+                                   linestyle = styles[i],
+                                   color = colors[i],
+                                   alpha=0.5,
                                    label=str(args.fullfilename[i]))
-    plt.legend()
+    plt.legend(prop={'size': 8})
     ax.set_yscale('log')
     ax.set_ylabel('events per bin')
     ax.set_xlabel('angle of outgoing electron (radians)')
@@ -192,15 +195,15 @@ def main(args):
 
     masses = [10, 200, 500]
     fig, ax = plt.subplots(1, 1)
-    ax.scatter(masses, mean_energies)
+    #ax.scatter(masses, mean_energies)
     
     ax.set_ylabel("Mean energy from sample (GeV)")
     ax.set_xlabel("Theoretical mass (MeV / c^2)")
-    fig.savefig(f'./energies/mean_energy_{args.process}.pdf')
+    #fig.savefig(f'./energies/mean_energy_{args.process}.pdf')
 
     #angles(mass)
     fig, ax = plt.subplots(1, 1)
-    ax.scatter(masses, mean_angles)
+    #ax.scatter(masses, mean_angles)
     
     ax.set_ylabel("angle between photons")
     ax.set_xlabel("Theoretical mass (MeV / c^2)")
@@ -229,7 +232,7 @@ def main(args):
     ax.set_ylabel("Angle between photons")
     plt.title(f"Angles and momentum in {args.process}")
     ax.legend()
-    fig.savefig(f'./angles/2dhist_angles_pz_{args.process}.pdf')
+    #fig.savefig(f'./angles/2dhist_angles_pz_{args.process}.pdf')
     plt.show()
 
 
@@ -238,7 +241,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     files = []
     masses = [10, 150, 300, 500]
-    processes = ["pf", "prima"]
+    processes = ["pf"]
     for process in processes:
         for mass in masses:
             files.append(f'm{mass}_{process}.lhe')

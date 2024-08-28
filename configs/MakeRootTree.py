@@ -38,10 +38,10 @@ class GetPart:
         #list of branches:
         self.evHeader1 = ROOT.ldmx.EventHeader()
         self.hcalRecHits = ROOT.std.vector('ldmx::HcalHit')();
-        #self.ecalRecHits = ROOT.std.vector('ldmx::EcalHit')();
+        self.ecalRecHits = ROOT.std.vector('ldmx::EcalHit')();
         self.tin1.SetBranchAddress("EventHeader",  ROOT.AddressOf( self.evHeader1 ));
         self.tin1.SetBranchAddress("HcalRecHits_v14",  ROOT.AddressOf( self.hcalRecHits ));
-        #self.tin1.SetBranchAddress("EcalRecHits_v14",  ROOT.AddressOf( self.ecalRecHits ));
+        self.tin1.SetBranchAddress("EcalRecHits_v14",  ROOT.AddressOf( self.ecalRecHits ));
 
         # loop and save:
         self.loop();
@@ -111,6 +111,58 @@ class GetPart:
         isSignal = array('i',[0])
         Features.Branch("isSignal",  isSignal,  'isSignal/I')
 
+
+        #ecal feature branches
+        e_NHits = array('f',[0])
+        Features.Branch("e_NHits",  e_NHits,  'e_NHits/F')
+        e_ZLength = array('f',[0])
+        Features.Branch("e_ZLength",  e_ZLength,  'e_ZLength/F')
+        e_ZAverage_w = array('f',[0])
+        Features.Branch("e_ZAverage_w",  e_ZAverage_w,  'e_ZAverage_w/F')
+
+        e_XAverage = array('f',[0])
+        Features.Branch("e_XAverage",  e_XAverage,  'e_XAverage/F')
+        e_YAverage = array('f',[0])
+        Features.Branch("e_YAverage",  e_YAverage,  'e_YAverage/F')
+
+        e_Ys = ROOT.std.vector('float')()
+        Features.Branch("e_Ys", e_Ys)
+        e_Xs = ROOT.std.vector('float')()
+        Features.Branch("e_Xs", e_Xs)
+        e_Zs = ROOT.std.vector('float')()
+        Features.Branch('e_Zs', e_Zs)
+        e_Es = ROOT.std.vector('float')()
+        Features.Branch("e_Es", e_Es)
+
+        e_ZWidth_w = array('f',[0])
+        Features.Branch("e_ZWidth_w",  e_ZWidth_w,  'e_ZWidth_w/F')
+
+        e_ZAv = array('f',[0])
+        Features.Branch("e_ZAv", e_ZAv, 'e_ZAv/F')
+
+        e_ZWidth = array('f',[0])
+        Features.Branch("e_ZWidth", e_ZWidth, 'e_ZWidth/F')
+
+        e_XYAv = array('f',[0])
+        Features.Branch("e_XYAv",  e_XYAv,  'e_XYAv/F')
+
+        e_XYAv_w = array('f',[0])
+        Features.Branch("e_XYAv_w", e_XYAv_w, 'e_XYAv_w/F')
+
+        e_XYWidth = array('f',[0])
+        Features.Branch("e_XYWidth",  e_XYWidth,  'e_XYWidth/F')
+
+        e_XYWidth_w =  array('f',[0])
+        Features.Branch("e_XYWidth_w", e_XYWidth_w, 'e_XYWidth_w/F')
+
+        e_DeltaZ = array('f',[0])
+        Features.Branch("e_DeltaZ",  e_DeltaZ,  'e_DeltaZ/F')
+        e_Eav = array('f',[0])
+        Features.Branch("e_Eav",  e_Eav,  'e_Eav/F')
+
+        e_EDensity = array('f',[0])
+        Features.Branch("e_EDensity",  e_EDensity,  'e_EDensity/F')
+
         nent = self.tin1.GetEntriesFast();
 
         for i in range(nent):
@@ -147,7 +199,37 @@ class GetPart:
             Zs.clear()
             Es.clear()
 
+            #ecal reset
+            e_NHits[0] = 0
+            e_ZLength[0] = 0.
+            e_ZAverage_w[0] = 0.
+            e_ZWidth_w[0] = 0.
+            e_ZAv[0] = 0.
+            e_ZWidth[0] = 0.
+            e_XYAv[0] = 0.
+            e_XYAv_w[0] = 0.
+            e_DeltaZ[0] = 0.
+            e_Eav[0] = 0.
+            e_EDensity[0] = 0.
+            
+            e_sumE = 0
 
+            e_x_positions = []
+            e_y_positions = []
+            e_z_positions = []
+            e_distances = []
+            e_weighted_z = []
+            e_weighted_dist = []
+            e_energies = []
+            e_weights = []
+
+
+            e_Xs.clear()
+            e_Ys.clear()
+            e_Zs.clear()
+            e_Es.clear()
+
+            #hcal colleciton
             for ih,hit in enumerate(self.hcalRecHits):
                 NHits[0] += 1
                 energies.append(hit.getEnergy())
@@ -155,8 +237,16 @@ class GetPart:
                 y_positions.append(hit.getYPos())
                 z_positions.append(hit.getZPos())
                 sumE += hit.getEnergy()
+            
+            for ih,hit in enumerate(self.ecalRecHits):
+                e_NHits[0] += 1
+                e_energies.append(hit.getEnergy())
+                e_x_positions.append(hit.getXPos())
+                e_y_positions.append(hit.getYPos())
+                e_z_positions.append(hit.getZPos())
+                e_sumE += hit.getEnergy()
 
-            # for Z length
+            # for Z length, hcal
             first_z = 1e6
             last_z = 0
             for l, m in enumerate(z_positions):
@@ -166,12 +256,30 @@ class GetPart:
                 if m > last_z:
                     last_z = m
 
+            e_first_z = 1e6
+            e_last_z = 0
+            for l, m in enumerate(e_z_positions):
+                #for n,o in enumerate(m):
+                if m < first_z:
+                    e_first_z = m
+                if m > last_z:
+                    e_last_z = m
+
             # loop over hits, weight by fraction of energy in that hit
             for p,q in enumerate(energies):
                 w = q/sumE
                 weights.append(w)
                 w_z = z_positions[p]*w
                 weighted_z.append(w_z)
+
+            #ecal weights
+            if e_sumE != 0:
+
+                for p,q in enumerate(e_energies):
+                    w = q/e_sumE
+                    e_weights.append(w)
+                    w_z = e_z_positions[p]*w
+                    e_weighted_z.append(w_z)
             
             
                 
@@ -185,6 +293,15 @@ class GetPart:
                 Zs.push_back(z_positions[p])
                 Es.push_back(energies[p])
 
+            if e_sumE != 0:
+                for p,q in enumerate(e_x_positions):
+                    distance = math.sqrt(e_x_positions[p]*e_x_positions[p] + e_y_positions[p]*e_y_positions[p])
+                    e_distances.append(distance)
+                    e_weighted_dist.append(distance*e_energies[p]/e_sumE)
+                    e_Xs.push_back(e_x_positions[p])
+                    e_Ys.push_back(e_y_positions[p])
+                    e_Zs.push_back(e_z_positions[p])
+                    e_Es.push_back(e_energies[p])
             
             z_variations = []
             xy_variations = []
@@ -195,21 +312,44 @@ class GetPart:
                 z_variations.append(weights[i]*((z_positions[i] - w_av_z)**2))
                 xy_variations.append(weights[i]*((distances[i] - w_av_xy)**2))
 
+            #ecal weighted std
+            e_z_variations = []
+            e_xy_variations = []
+            #loop over again, to get standard deviation weighted
+            e_w_av_z = np.sum(e_weighted_z)
+            e_w_av_xy = np.sum(weighted_dist)
+            for i in range(len(e_weights)):
+                e_z_variations.append(e_weights[i]*((e_z_positions[i] - e_w_av_z)**2))
+                e_xy_variations.append(e_weights[i]*((e_distances[i] - e_w_av_xy)**2))
+
             #weighted std
             w_std_dist = math.sqrt(np.sum(xy_variations))
             
             w_std_z = math.sqrt(np.sum(z_variations))
 
-        
+            e_w_std_dist = math.sqrt(np.sum(e_xy_variations))
+            
+            e_w_std_z = math.sqrt(np.sum(e_z_variations))
+
+
+            #hcal distances
             if len(distances) != 0:
 
                 XYAv[0] = np.mean(distances)
                 XYWidth[0] = np.std(distances)
                 XYAv_w[0] = np.sum(weighted_dist)
                 XYWidth_w[0] = w_std_dist
+                
 
+            #ecal distances    
+            if len(e_distances) != 0:
 
-            # get the mean and stddev for this event
+                e_XYAv[0] = np.mean(e_distances)
+                e_XYWidth[0] = np.std(e_distances)
+                e_XYAv_w[0] = np.sum(e_weighted_dist)
+                e_XYWidth_w[0] = e_w_std_dist
+
+# get the mean and stddev for this event
             if len(z_positions) != 0:
                 ZAverage_w[0] = (w_av_z)
                 ZAv[0] = np.mean(z_positions)
@@ -218,10 +358,31 @@ class GetPart:
                 ZLength[0] = (abs(last_z - first_z))
                 DeltaZ[0] = (np.max(weighted_z)) - (np.mean(weighted_z))
 
+
+
+            # get the mean and stddev for this event
+            if len(e_z_positions) != 0:
+                e_weighted_z = 0
+                e_ZAverage_w[0] = (e_w_av_z)
+                e_ZAv[0] = np.mean(e_z_positions)
+                e_ZWidth_w[0] = (e_w_std_z)
+                e_ZWidth[0] = np.std(e_z_positions)
+                e_ZLength[0] = (abs(e_last_z - e_first_z))
+                e_DeltaZ[0] = (np.max(e_weighted_z)) - (np.mean(e_weighted_z))
+
+            #avg energy and density hcal
             if len(energies) != 0 and len(z_positions) != 0:
                 Eav[0] = (np.mean(energies))
                 if (abs(last_z - first_z)) != 0:
                     EDensity[0] = (np.sum(energies))/(abs(last_z - first_z))
+
+            #ecal energy stuff
+            if len(e_energies) != 0 and len(e_z_positions) != 0:
+                e_Eav[0] = (np.mean(e_energies))
+                if (abs(e_last_z - e_first_z)) != 0:
+                    e_EDensity[0] = (np.sum(e_energies))/(abs(e_last_z - e_first_z))
+
+
             Eav1 = []
             Eav2 = []
             Eav3 = []

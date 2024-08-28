@@ -95,5 +95,5 @@ tsDigisDown  =TrigScintDigiProducer.down()
 p.sequence=[ sim, hcalDigis, hcalrec, hcalVeto, hcalcluster, ecalDigi, ecalrec, ecalVeto]#, tsDigisTag, tsDigisUp, tsDigisDown] #, trackerHitKiller, simpleTrigger, findableTrack, trackerVeto ]
 p.outputFiles=["recoPN.root"]
 
-p.maxEvents = 500000  #200000#
+p.maxEvents = 1000000  #200000#
 p.logFrequency = 10
