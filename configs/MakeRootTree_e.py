@@ -37,10 +37,10 @@ class GetPart:
 
         #list of branches:
         self.evHeader1 = ROOT.ldmx.EventHeader()
-        #self.hcalRecHits = ROOT.std.vector('ldmx::HcalHit')();
+        self.hcalRecHits = ROOT.std.vector('ldmx::HcalHit')();
         self.ecalRecHits = ROOT.std.vector('ldmx::EcalHit')();
         self.tin1.SetBranchAddress("EventHeader",  ROOT.AddressOf( self.evHeader1 ));
-        #self.tin1.SetBranchAddress("HcalRecHits_v14",  ROOT.AddressOf( self.hcalRecHits ));
+        self.tin1.SetBranchAddress("HcalRecHits_v14",  ROOT.AddressOf( self.hcalRecHits ));
         self.tin1.SetBranchAddress("EcalRecHits_v14",  ROOT.AddressOf( self.ecalRecHits ));
 
         # loop and save:
@@ -58,10 +58,6 @@ class GetPart:
         ZAverage_w = array('f',[0])
         Features.Branch("ZAverage_w",  ZAverage_w,  'ZAverage_w/F')
 
-        XAverage = array('f',[0])
-        Features.Branch("XAverage",  XAverage,  'XAverage/F')
-        YAverage = array('f',[0])
-        Features.Branch("YAverage",  YAverage,  'YAverage/F')
 
         Ys = ROOT.std.vector('float')()
         Features.Branch("Ys", Ys)
@@ -93,20 +89,12 @@ class GetPart:
         XYWidth_w =  array('f',[0])
         Features.Branch("XYWidth_w", XYWidth_w, 'XYWidth_w/F')
 
-        DeltaZ = array('f',[0])
-        Features.Branch("DeltaZ",  DeltaZ,  'DeltaZ/F')
         Eav = array('f',[0])
         Features.Branch("Eav",  Eav,  'Eav/F')
 
         EDensity = array('f',[0])
         Features.Branch("EDensity",  EDensity,  'EDensity/F')
 
-        Eav_cut_1 = array('f',[0])
-        Features.Branch("Eav_cut_1",  Eav_cut_1,  'Eav_cut_1/F')
-        Eav_cut_2 = array('f',[0])
-        Features.Branch("Eav_cut_2",  Eav_cut_2,  'Eav_cut_2/F')
-        Eav_cut_3 = array('f',[0])
-        Features.Branch("Eav_cut_3",  Eav_cut_3,  'Eav_cut_3/F')
 
         isSignal = array('i',[0])
         Features.Branch("isSignal",  isSignal,  'isSignal/I')
@@ -123,12 +111,8 @@ class GetPart:
             ZWidth[0] = 0.
             XYAv[0] = 0.
             XYAv_w[0] = 0.
-            DeltaZ[0] = 0.
             Eav[0] = 0.
             EDensity[0] = 0.
-            Eav_cut_1[0] = 0.
-            Eav_cut_2[0] = 0.
-            Eav_cut_3[0] = 0.
             isSignal[0] = 0
             sumE = 0
 
@@ -156,18 +140,13 @@ class GetPart:
                 z_positions.append(hit.getZPos())
                 sumE += hit.getEnergy()
 
+            if len(energies) != 0:
             # for Z length
-            first_z = 1e6
-            last_z = 0
-            for l, m in enumerate(z_positions):
-                #for n,o in enumerate(m):
-                if m < first_z:
-                    first_z = m
-                if m > last_z:
-                    last_z = m
+                first_z = np.min(z_positions)
+                last_z = np.max(z_positions)
 
-            # loop over hits, weight by fraction of energy in that hit
-            if sumE != 0:    
+
+            # loop over hits, weight by fraction of energy in that hit  
                 for p,q in enumerate(energies):
                     w = q/sumE
                     weights.append(w)
@@ -202,7 +181,7 @@ class GetPart:
                 w_std_z = math.sqrt(np.sum(z_variations))
 
         
-            if len(distances) != 0:
+
 
                 XYAv[0] = np.mean(distances)
                 XYWidth[0] = np.std(distances)
@@ -211,40 +190,24 @@ class GetPart:
 
 
             # get the mean and stddev for this event
-            if len(z_positions) != 0:
+
                 weighted_z = 0
                 ZAverage_w[0] = (w_av_z)
                 ZAv[0] = np.mean(z_positions)
                 ZWidth_w[0] = (w_std_z)
                 ZWidth[0] = np.std(z_positions)
                 ZLength[0] = (abs(last_z - first_z))
-                DeltaZ[0] = (np.max(weighted_z)) - (np.mean(weighted_z))
 
-            if len(energies) != 0 and len(z_positions) != 0:
                 Eav[0] = (np.mean(energies))
-                if (abs(last_z - first_z)) != 0:
+
+                if (last_z - first_z) != 0:
                     EDensity[0] = (np.sum(energies))/(abs(last_z - first_z))
-            Eav1 = []
-            Eav2 = []
-            Eav3 = []
 
-            isSignal[0] = 1
 
-            for ih,hit in enumerate(self.ecalRecHits):
-                z = hit.getZPos()
-                if z < (w_av_z):
-                    Eav1.append(hit.getEnergy())
-                if z > (w_av_z) and z < (w_av_z) + 10*(w_std_z):
-                    Eav2.append(hit.getEnergy())
-                if z > (w_av_z) + 10*(w_std_z):
-                    Eav3.append(hit.getEnergy())
-            if len(Eav1) != 0:
-                Eav_cut_1[0] = (np.mean(Eav1))
-            if len(Eav2) != 0:
-                Eav_cut_2[0] = (np.mean(Eav2))
-            if len(Eav3) != 0:
-                Eav_cut_3[0] = (np.mean(Eav3))
-            if (abs(last_z - first_z)) != 0 and len(z_positions) != 0 and len(energies) != 0:
+                isSignal[0] = 1
+
+
+ 
                 Features.Fill()
         f.Write();
         f.Close();

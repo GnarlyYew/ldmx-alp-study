@@ -40,8 +40,8 @@ class GetPart:
         self.hcalRecHits = ROOT.std.vector('ldmx::HcalHit')();
         self.ecalRecHits = ROOT.std.vector('ldmx::EcalHit')();
         self.tin1.SetBranchAddress("EventHeader",  ROOT.AddressOf( self.evHeader1 ));
-        self.tin1.SetBranchAddress("HcalRecHits_v14",  ROOT.AddressOf( self.hcalRecHits ));
-        self.tin1.SetBranchAddress("EcalRecHits_v14",  ROOT.AddressOf( self.ecalRecHits ));
+        self.tin1.SetBranchAddress("HcalRecHits_sim",  ROOT.AddressOf( self.hcalRecHits ));
+        self.tin1.SetBranchAddress("EcalRecHits_sim",  ROOT.AddressOf( self.ecalRecHits ));
 
         # loop and save:
         self.loop();
@@ -58,19 +58,15 @@ class GetPart:
         ZAverage_w = array('f',[0])
         Features.Branch("ZAverage_w",  ZAverage_w,  'ZAverage_w/F')
 
-        XAverage = array('f',[0])
-        Features.Branch("XAverage",  XAverage,  'XAverage/F')
-        YAverage = array('f',[0])
-        Features.Branch("YAverage",  YAverage,  'YAverage/F')
 
-        Ys = ROOT.std.vector('float')()
-        Features.Branch("Ys", Ys)
-        Xs = ROOT.std.vector('float')()
-        Features.Branch("Xs", Xs)
-        Zs = ROOT.std.vector('float')()
-        Features.Branch('Zs', Zs)
-        Es = ROOT.std.vector('float')()
-        Features.Branch("Es", Es)
+#        Ys = ROOT.std.vector('float')()
+#        Features.Branch("Ys", Ys)
+ #       Xs = ROOT.std.vector('float')()
+#        Features.Branch("Xs", Xs)
+ #       Zs = ROOT.std.vector('float')()
+#        Features.Branch('Zs', Zs)
+#        Es = ROOT.std.vector('float')()
+ #       Features.Branch("Es", Es)
 
         ZWidth_w = array('f',[0])
         Features.Branch("ZWidth_w",  ZWidth_w,  'ZWidth_w/F')
@@ -93,20 +89,12 @@ class GetPart:
         XYWidth_w =  array('f',[0])
         Features.Branch("XYWidth_w", XYWidth_w, 'XYWidth_w/F')
 
-        DeltaZ = array('f',[0])
-        Features.Branch("DeltaZ",  DeltaZ,  'DeltaZ/F')
         Eav = array('f',[0])
         Features.Branch("Eav",  Eav,  'Eav/F')
 
         EDensity = array('f',[0])
         Features.Branch("EDensity",  EDensity,  'EDensity/F')
 
-        Eav_cut_1 = array('f',[0])
-        Features.Branch("Eav_cut_1",  Eav_cut_1,  'Eav_cut_1/F')
-        Eav_cut_2 = array('f',[0])
-        Features.Branch("Eav_cut_2",  Eav_cut_2,  'Eav_cut_2/F')
-        Eav_cut_3 = array('f',[0])
-        Features.Branch("Eav_cut_3",  Eav_cut_3,  'Eav_cut_3/F')
 
         isSignal = array('i',[0])
         Features.Branch("isSignal",  isSignal,  'isSignal/I')
@@ -120,19 +108,15 @@ class GetPart:
         e_ZAverage_w = array('f',[0])
         Features.Branch("e_ZAverage_w",  e_ZAverage_w,  'e_ZAverage_w/F')
 
-        e_XAverage = array('f',[0])
-        Features.Branch("e_XAverage",  e_XAverage,  'e_XAverage/F')
-        e_YAverage = array('f',[0])
-        Features.Branch("e_YAverage",  e_YAverage,  'e_YAverage/F')
 
-        e_Ys = ROOT.std.vector('float')()
-        Features.Branch("e_Ys", e_Ys)
-        e_Xs = ROOT.std.vector('float')()
-        Features.Branch("e_Xs", e_Xs)
-        e_Zs = ROOT.std.vector('float')()
-        Features.Branch('e_Zs', e_Zs)
-        e_Es = ROOT.std.vector('float')()
-        Features.Branch("e_Es", e_Es)
+ #       e_Ys = ROOT.std.vector('float')()
+ #       Features.Branch("e_Ys", e_Ys)
+ #       e_Xs = ROOT.std.vector('float')()
+ #       Features.Branch("e_Xs", e_Xs)
+#        e_Zs = ROOT.std.vector('float')()
+#        Features.Branch('e_Zs', e_Zs)
+ #       e_Es = ROOT.std.vector('float')()
+#        Features.Branch("e_Es", e_Es)
 
         e_ZWidth_w = array('f',[0])
         Features.Branch("e_ZWidth_w",  e_ZWidth_w,  'e_ZWidth_w/F')
@@ -155,8 +139,7 @@ class GetPart:
         e_XYWidth_w =  array('f',[0])
         Features.Branch("e_XYWidth_w", e_XYWidth_w, 'e_XYWidth_w/F')
 
-        e_DeltaZ = array('f',[0])
-        Features.Branch("e_DeltaZ",  e_DeltaZ,  'e_DeltaZ/F')
+
         e_Eav = array('f',[0])
         Features.Branch("e_Eav",  e_Eav,  'e_Eav/F')
 
@@ -175,12 +158,10 @@ class GetPart:
             ZWidth[0] = 0.
             XYAv[0] = 0.
             XYAv_w[0] = 0.
-            DeltaZ[0] = 0.
+   
             Eav[0] = 0.
             EDensity[0] = 0.
-            Eav_cut_1[0] = 0.
-            Eav_cut_2[0] = 0.
-            Eav_cut_3[0] = 0.
+
             isSignal[0] = 0
             sumE = 0
 
@@ -194,10 +175,10 @@ class GetPart:
             weights = []
 
 
-            Xs.clear()
-            Ys.clear()
-            Zs.clear()
-            Es.clear()
+ #           Xs.clear()
+ #           Ys.clear()
+ #           Zs.clear()
+ #           Es.clear()
 
             #ecal reset
             e_NHits[0] = 0
@@ -208,7 +189,7 @@ class GetPart:
             e_ZWidth[0] = 0.
             e_XYAv[0] = 0.
             e_XYAv_w[0] = 0.
-            e_DeltaZ[0] = 0.
+
             e_Eav[0] = 0.
             e_EDensity[0] = 0.
             
@@ -224,10 +205,10 @@ class GetPart:
             e_weights = []
 
 
-            e_Xs.clear()
-            e_Ys.clear()
-            e_Zs.clear()
-            e_Es.clear()
+ #           e_Xs.clear()
+ #           e_Ys.clear()
+  #          e_Zs.clear()
+  #          e_Es.clear()
 
             #hcal colleciton
             for ih,hit in enumerate(self.hcalRecHits):
@@ -238,6 +219,7 @@ class GetPart:
                 z_positions.append(hit.getZPos())
                 sumE += hit.getEnergy()
             
+            #ecal collection
             for ih,hit in enumerate(self.ecalRecHits):
                 e_NHits[0] += 1
                 e_energies.append(hit.getEnergy())
@@ -288,20 +270,20 @@ class GetPart:
                 distance = math.sqrt(x_positions[p]*x_positions[p] + y_positions[p]*y_positions[p])
                 distances.append(distance)
                 weighted_dist.append(distance*energies[p]/sumE)
-                Xs.push_back(x_positions[p])
-                Ys.push_back(y_positions[p])
-                Zs.push_back(z_positions[p])
-                Es.push_back(energies[p])
+   #             Xs.push_back(x_positions[p])
+  #              Ys.push_back(y_positions[p])
+   #             Zs.push_back(z_positions[p])
+    #            Es.push_back(energies[p])
 
             if e_sumE != 0:
                 for p,q in enumerate(e_x_positions):
-                    distance = math.sqrt(e_x_positions[p]*e_x_positions[p] + e_y_positions[p]*e_y_positions[p])
-                    e_distances.append(distance)
-                    e_weighted_dist.append(distance*e_energies[p]/e_sumE)
-                    e_Xs.push_back(e_x_positions[p])
-                    e_Ys.push_back(e_y_positions[p])
-                    e_Zs.push_back(e_z_positions[p])
-                    e_Es.push_back(e_energies[p])
+                    e_distance = math.sqrt(e_x_positions[p]*e_x_positions[p] + e_y_positions[p]*e_y_positions[p])
+                    e_distances.append(e_distance)
+                    e_weighted_dist.append(e_distance*e_energies[p]/e_sumE)
+ #                   e_Xs.push_back(e_x_positions[p])
+  #                  e_Ys.push_back(e_y_positions[p])
+   #                 e_Zs.push_back(e_z_positions[p])
+    #                e_Es.push_back(e_energies[p])
             
             z_variations = []
             xy_variations = []
@@ -317,7 +299,7 @@ class GetPart:
             e_xy_variations = []
             #loop over again, to get standard deviation weighted
             e_w_av_z = np.sum(e_weighted_z)
-            e_w_av_xy = np.sum(weighted_dist)
+            e_w_av_xy = np.sum(e_weighted_dist)
             for i in range(len(e_weights)):
                 e_z_variations.append(e_weights[i]*((e_z_positions[i] - e_w_av_z)**2))
                 e_xy_variations.append(e_weights[i]*((e_distances[i] - e_w_av_xy)**2))
@@ -356,19 +338,19 @@ class GetPart:
                 ZWidth_w[0] = (w_std_z)
                 ZWidth[0] = np.std(z_positions)
                 ZLength[0] = (abs(last_z - first_z))
-                DeltaZ[0] = (np.max(weighted_z)) - (np.mean(weighted_z))
+
 
 
 
             # get the mean and stddev for this event
             if len(e_z_positions) != 0:
-                e_weighted_z = 0
+
                 e_ZAverage_w[0] = (e_w_av_z)
                 e_ZAv[0] = np.mean(e_z_positions)
                 e_ZWidth_w[0] = (e_w_std_z)
                 e_ZWidth[0] = np.std(e_z_positions)
                 e_ZLength[0] = (abs(e_last_z - e_first_z))
-                e_DeltaZ[0] = (np.max(e_weighted_z)) - (np.mean(e_weighted_z))
+       
 
             #avg energy and density hcal
             if len(energies) != 0 and len(z_positions) != 0:
@@ -383,26 +365,10 @@ class GetPart:
                     e_EDensity[0] = (np.sum(e_energies))/(abs(e_last_z - e_first_z))
 
 
-            Eav1 = []
-            Eav2 = []
-            Eav3 = []
 
             isSignal[0] = 1
 
-            for ih,hit in enumerate(self.hcalRecHits):
-                z = hit.getZPos()
-                if z < (w_av_z):
-                    Eav1.append(hit.getEnergy())
-                if z > (w_av_z) and z < (w_av_z) + 10*(w_std_z):
-                    Eav2.append(hit.getEnergy())
-                if z > (w_av_z) + 10*(w_std_z):
-                    Eav3.append(hit.getEnergy())
-            if len(Eav1) != 0:
-                Eav_cut_1[0] = (np.mean(Eav1))
-            if len(Eav2) != 0:
-                Eav_cut_2[0] = (np.mean(Eav2))
-            if len(Eav3) != 0:
-                Eav_cut_3[0] = (np.mean(Eav3))
+
             if (abs(last_z - first_z)) != 0 and len(z_positions) != 0 and len(energies) != 0:
                 Features.Fill()
         f.Write();

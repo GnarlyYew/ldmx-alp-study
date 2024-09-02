@@ -10,6 +10,7 @@ from mpl_toolkits.mplot3d import Axes3D
 import mplhep # style of plots
 import numpy as np
 import argparse
+import pickle as pkl
 
 mpl.style.use(mplhep.style.ROOT) # set the plot style
 
@@ -19,14 +20,13 @@ nbins = 100
 #load the data
 def main(args):
     with uproot.open(f"ALP_m{args.mass}_{args.process}_ntuple.root") as f:
-        signal_t = f['Features'].arrays(library='pd')
+        signal = f['Features'].arrays(library='pd')
 
-    with uproot.open("ALP_mall_PN_ntuple.root") as f:
-        bkgd_t = f['Features'].arrays(library='pd')
+    with uproot.open("ALP_m__PN_ntuple.root") as f:
+        bkgd = f['Features'].arrays(library='pd')
 
+    print(type(signal))
 
-    signal = signal_t[1]
-    bkgd = bkgd_t[1]
 
     #assigning labels
     signal['Label'] = 'signal'
@@ -43,18 +43,19 @@ def main(args):
     print(len(data))
     #want everything except isSignal and label and xs and ys and zs
     features = data.columns[:-1]
-    features = features.drop(['Eav_cut_1',
-    'Eav_cut_2','Eav_cut_3','XAverage','YAverage','ZAv','XYAv','XYWidth', 'isSignal', 'e_Es', 'e_NHits'])
+    features = features.drop(['ZAv','XYAv','XYWidth',  'isSignal',
+                              'e_NHits', 'e_ZLength', 'e_ZAverage_w', 'e_ZWidth_w', 'e_ZAv',
+                              'e_ZWidth', 'e_XYAv', 'e_XYAv_w', 'e_XYWidth', 'e_XYWidth_w', 'e_EDensity', 'e_Eav'
+                              ])
 
 
     data = pd.concat([bkgd, signal], ignore_index=True)
 
     data['Label'] = pd.Categorical(data['Label'])
-    data = data.drop_duplicates(features)
+    
     X = data
     y = data['Label']
 
-    skf = StratifiedKFold(n_splits=3, shuffle=True, random_state=42)
 
     signal_data = data[data['Label'] == 'signal']
     background_data = data[data['Label'] == 'bkgd']
@@ -81,8 +82,8 @@ def main(args):
     for fold in range(5):
 
         #sampling 1000 events from each type
-        sampled_signal = signal_data.sample(n=1000, random_state=42 + fold).reset_index(drop=True)
-        sampled_background = background_data.sample(n=1000, random_state=42 + fold).reset_index(drop=True)
+        sampled_signal = signal_data.sample(n=10000, random_state=42 + fold, replace=False).reset_index(drop=True)
+        sampled_background = background_data.sample(n=10000, random_state=42 + fold, replace=False).reset_index(drop=True)
 
         # Combine the samples
         sampled_data = pd.concat([sampled_signal, sampled_background]).reset_index(drop=True)
@@ -95,12 +96,15 @@ def main(args):
                         missing=-999.0,feature_names=features)
         test = xgb.DMatrix(data=test_set[features],label=test_set.Label.cat.codes,
                     missing=-999.0,feature_names=features)
+        
 
         booster = xgb.train(param,train,num_boost_round=num_trees)
-
+        output = open(f'test_weights_{args.process}.pkl', 'wb')
+        pkl.dump(booster, output)
         print(booster.eval(test))
 
         predictions = booster.predict(test)
+ 
 
             # plot all predictions (both signal and background)
 
