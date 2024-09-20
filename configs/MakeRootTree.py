@@ -40,8 +40,8 @@ class GetPart:
         self.hcalRecHits = ROOT.std.vector('ldmx::HcalHit')();
         self.ecalRecHits = ROOT.std.vector('ldmx::EcalHit')();
         self.tin1.SetBranchAddress("EventHeader",  ROOT.AddressOf( self.evHeader1 ));
-        self.tin1.SetBranchAddress("HcalRecHits_sim",  ROOT.AddressOf( self.hcalRecHits ));
-        self.tin1.SetBranchAddress("EcalRecHits_sim",  ROOT.AddressOf( self.ecalRecHits ));
+        self.tin1.SetBranchAddress("HcalRecHits_v14",  ROOT.AddressOf( self.hcalRecHits ));
+        self.tin1.SetBranchAddress("EcalRecHits_v14",  ROOT.AddressOf( self.ecalRecHits ));
 
         # loop and save:
         self.loop();

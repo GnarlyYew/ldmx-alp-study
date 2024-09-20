@@ -43,10 +43,10 @@ def main(args):
     data['Label'] = pd.Categorical(data['Label'])
     print(len(data))
     #want everything except isSignal and label and xs and ys and zs
-    features = data.columns[:-1]
+    features = data.columns
     features = features.drop(['ZAv','XYAv','XYWidth',  'isSignal',
                               'e_NHits', 'e_ZLength', 'e_ZAverage_w', 'e_ZWidth_w', 'e_ZAv',
-                              'e_ZWidth', 'e_XYAv', 'e_XYAv_w', 'e_XYWidth', 'e_XYWidth_w', 'e_EDensity', 'e_Eav'])
+                              'e_ZWidth', 'e_XYAv', 'e_XYAv_w', 'e_XYWidth', 'e_XYWidth_w', 'e_EDensity', 'e_Eav', 'Label'])
 
     data = pd.concat([bkgd, signal], ignore_index=True)
 
@@ -56,7 +56,7 @@ def main(args):
     y = data['Label']
 
     #getting some data to test
-    sampled_signal = signal.sample(n=num_signal, random_state=25, replace=False).reset_index(drop=True)
+    sampled_signal = signal
     sampled_background = bkgd.sample(n=num_signal, random_state=47, replace=False).reset_index(drop=True)
 
     # Combine the samples
@@ -69,9 +69,11 @@ def main(args):
     
 
     test = xgb.DMatrix(data=sampled_data[features],label=sampled_data.Label.cat.codes,
-                    missing=-999.0,feature_names=features)
+                    missing=-999.0,feature_names=features, enable_categorical=True)
 
     predictions = gbm.predict(test)
+    print(len(predictions))
+    print(num_signal)
 
 
     sig_hist, _ = np.histogram(predictions[test.get_label().astype(bool)],bins=np.linspace(0,1,nbins),
