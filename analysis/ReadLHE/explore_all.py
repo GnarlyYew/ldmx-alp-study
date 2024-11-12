@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import argparse
 
-path = "/Users/nathanjay/Desktop/SURF/ALP-8GeV/all/"
+path = "/Users/nathanjay/Desktop/SURF/ALP-8GeV/displaced/"
 
 def main(args):
     pts = []
@@ -35,6 +35,7 @@ def main(args):
         e_pt = []
         e_pz = []
         e_angle = []
+        alp_vtim = []
         nphoton = 0
 
         # TLorentzVector for the two photons
@@ -107,7 +108,7 @@ def main(args):
     ax.set_yscale('log')
     ax.set_ylabel('events per bin')
     ax.set_xlabel('pt of all photons [GeV/c]')
-    fig.savefig(f'./momenta/pt_{args.process}.pdf')
+    fig.savefig(f'./decay/pt_{args.process}.pdf')
 
     #electron momentum
     fig, ax = plt.subplots(1,1)
@@ -122,7 +123,7 @@ def main(args):
     ax.set_yscale('log')
     ax.set_ylabel('events per bin')
     ax.set_xlabel('pt of outgoing electrons [GeV/c]')
-    fig.savefig(f'./momenta/e_pt_{args.process}.pdf')
+    fig.savefig(f'./decay/e_pt_{args.process}.pdf')
 
     #photon momentum
     fig, ax = plt.subplots(1,1)
@@ -137,7 +138,7 @@ def main(args):
     ax.set_yscale('log')
     ax.set_ylabel('events per bin')
     ax.set_xlabel('pz of all photons [GeV/c]')
-    fig.savefig(f'./momenta/pz_{args.process}.pdf')
+    fig.savefig(f'./decay/pz_{args.process}.pdf')
 
     #electron momentum
     fig, ax = plt.subplots(1,1)
@@ -152,7 +153,7 @@ def main(args):
     ax.set_yscale('log')
     ax.set_ylabel('events per bin')
     ax.set_xlabel('pz of electrons [GeV/c]')
-    fig.savefig(f'./momenta/e_pz_{args.process}.pdf')
+#    fig.savefig(f'./decay/e_pz_{args.process}.pdf')
 
     #photon angles 
     styles = ["solid", "solid", "solid", "solid", "dashed", "dashed", "dashed", "dashed"]
@@ -191,7 +192,7 @@ def main(args):
     ax.set_yscale('log')
     ax.set_ylabel('events per bin')
     ax.set_xlabel('angle of outgoing electron (radians)')
-    fig.savefig(f'./angles/e_angle_all{args.process}.pdf')
+    fig.savefig(f'./decay/e_angle_all{args.process}.pdf')
 
     masses = [10, 200, 500]
     fig, ax = plt.subplots(1, 1)
@@ -240,11 +241,11 @@ def main(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     files = []
-    masses = [10, 150, 300, 500]
-    processes = ["pf"]
+    masses = [10, 100, 300, 500]
+    processes = ["prima"]
     for process in processes:
         for mass in masses:
-            files.append(f'm{mass}_{process}.lhe')
+            files.append(f'DP_m{mass}_{process}.lhe')
     
     parser.add_argument("--fullfilename", help="full filename with path", default=files)
     parser.add_argument("--process", help="Primakoff or Photon Fusion")

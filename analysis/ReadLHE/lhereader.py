@@ -2,7 +2,7 @@ import xml.etree.ElementTree as ET
 from ROOT import TLorentzVector
 
 class Particle:
-    def __init__(self, eventid, pdgid, spin, px=0, py=0, pz=0, energy=0, mass=0, status=0):
+    def __init__(self, eventid, pdgid, spin, px=0, py=0, pz=0, energy=0, mass=0, vtim=0, status=0):
         self.eventid=eventid
         self.pdgid=pdgid
         self.px=px
@@ -12,6 +12,7 @@ class Particle:
         self.mass=mass
         self.spin=spin
         self.status=status
+        self.vtim=vtim
 
     @property
     def p4(self):
@@ -43,9 +44,17 @@ class Event:
     def __init__(self,num_particles):
         self.num_particles=num_particles
         self.particles=[]
+        self.vertex_x = None
+        self.vertex_y = None
+        self.vertex_z = None
+        self.vertex_distance = None
 
     def __addParticle__(self,particle):
         self.particles.append(particle)
+    
+    def get_vertex(self):
+        return (self.vertex_x, self.vertex_y, self.vertex_z, self.vertex_distance)
+
 
     def getParticlesByIDs(self,idlist):
         partlist=[]
@@ -82,7 +91,7 @@ def readLHEF(name):
             e=Event(num_part)
             for i in range(1,num_part+1):
                 part_data = lines[i].strip().split()
-                p = Particle(int(n),int(part_data[0]), float(part_data[12]), float(part_data[6]), float(part_data[7]), float(part_data[8]), float(part_data[9]), float(part_data[10]), int(part_data[1]))
+                p = Particle(int(n),int(part_data[0]), float(part_data[12]), float(part_data[6]), float(part_data[7]), float(part_data[8]), float(part_data[9]), float(part_data[10]), float(part_data[11]), int(part_data[1]))
                 e.__addParticle__(p)
             lhefdata.__addEvent__(e)
 

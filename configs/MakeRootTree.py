@@ -58,16 +58,16 @@ class GetPart:
         ZAverage_w = array('f',[0])
         Features.Branch("ZAverage_w",  ZAverage_w,  'ZAverage_w/F')
 
-
+#        print('hello')
 #        Ys = ROOT.std.vector('float')()
 #        Features.Branch("Ys", Ys)
- #       Xs = ROOT.std.vector('float')()
+#       Xs = ROOT.std.vector('float')()
 #        Features.Branch("Xs", Xs)
- #       Zs = ROOT.std.vector('float')()
+#        Zs = ROOT.std.vector('float')()
 #        Features.Branch('Zs', Zs)
 #        Es = ROOT.std.vector('float')()
  #       Features.Branch("Es", Es)
-
+ #       print('b')
         ZWidth_w = array('f',[0])
         Features.Branch("ZWidth_w",  ZWidth_w,  'ZWidth_w/F')
 
@@ -109,13 +109,13 @@ class GetPart:
         Features.Branch("e_ZAverage_w",  e_ZAverage_w,  'e_ZAverage_w/F')
 
 
- #       e_Ys = ROOT.std.vector('float')()
- #       Features.Branch("e_Ys", e_Ys)
- #       e_Xs = ROOT.std.vector('float')()
- #       Features.Branch("e_Xs", e_Xs)
+#        e_Ys = ROOT.std.vector('float')()
+#        Features.Branch("e_Ys", e_Ys)
+#        e_Xs = ROOT.std.vector('float')()
+#        Features.Branch("e_Xs", e_Xs)
 #        e_Zs = ROOT.std.vector('float')()
 #        Features.Branch('e_Zs', e_Zs)
- #       e_Es = ROOT.std.vector('float')()
+#        e_Es = ROOT.std.vector('float')()
 #        Features.Branch("e_Es", e_Es)
 
         e_ZWidth_w = array('f',[0])
@@ -147,6 +147,7 @@ class GetPart:
         Features.Branch("e_EDensity",  e_EDensity,  'e_EDensity/F')
 
         nent = self.tin1.GetEntriesFast();
+
 
         for i in range(nent):
             self.tin1.GetEntry(i);
@@ -217,6 +218,9 @@ class GetPart:
                 x_positions.append(hit.getXPos())
                 y_positions.append(hit.getYPos())
                 z_positions.append(hit.getZPos())
+#                all_x.append(hit.getXPos())
+#                all_y.append(hit.getYPos())
+#                all_z.append(hit.getZPos())
                 sumE += hit.getEnergy()
             
             #ecal collection
@@ -371,6 +375,8 @@ class GetPart:
 
             if (abs(last_z - first_z)) != 0 and len(z_positions) != 0 and len(energies) != 0:
                 Features.Fill()
+    
+        #make plot for coordinate position
         f.Write();
         f.Close();
 
