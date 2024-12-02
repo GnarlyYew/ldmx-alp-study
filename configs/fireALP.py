@@ -19,10 +19,10 @@ from LDMX.Ecal import ecal_hardcoded_conditions
 from LDMX.Ecal import vetos as ecal_veto
 
 # edit these for each run:
-filepath = "/Users/nathanjay/Desktop/SURF/ALP-8GeV/all/"
-infilename = "m100_prima.lhe"
-outfilename = "ALP_m100_prima_reco.root"
-nevents = 50000
+filepath = "/Users/nathanjay/Desktop/SURF/ALP-8GeV/Displaced_v2/"
+infilename = "DP2_m10_prima.lhe"
+outfilename = "ALP_DP2_m10_prima_reco.root"
+nevents = 5000
 
 #from LDMX.Tools.HgcrocEmulator import HgcrocEmulator
 # Instantiate the simulator

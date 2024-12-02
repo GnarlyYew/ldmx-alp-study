@@ -78,6 +78,11 @@ class LHEFData:
             partlist.extend(event.getParticlesByIDs(idlist))
         return partlist
 
+    def getVertices(self):
+        vertices = []
+        for event in self.events:
+            vertices.extend(event.get_vertex())
+        return vertices
 
 def readLHEF(name):
     tree = ET.parse(name)
@@ -93,6 +98,16 @@ def readLHEF(name):
                 part_data = lines[i].strip().split()
                 p = Particle(int(n),int(part_data[0]), float(part_data[12]), float(part_data[6]), float(part_data[7]), float(part_data[8]), float(part_data[9]), float(part_data[10]), float(part_data[11]), int(part_data[1]))
                 e.__addParticle__(p)
+            
+             # Check if there's a vertex line after particle data
+            if lines[-1].startswith("#vertex"):
+                vertex_data = lines[-1].split()
+                vertex_x = float(vertex_data[1])
+                vertex_y = float(vertex_data[2])
+                vertex_z = float(vertex_data[3])
+                vertex_distance = float(vertex_data[4].strip("[]"))
+                e.set_vertex(vertex_x, vertex_y, vertex_z, vertex_distance)
+
             lhefdata.__addEvent__(e)
 
     return lhefdata

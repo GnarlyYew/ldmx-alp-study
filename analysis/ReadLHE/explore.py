@@ -16,6 +16,7 @@ def main(args):
     photons=data.getParticlesByIDs([22])
     ALPs=data.getParticlesByIDs([666])
     electrons=data.getParticlesByIDs([11])
+    vertices=data.getVertices()
 
     pt = []
     pz = []
@@ -78,6 +79,11 @@ def main(args):
         #calculate magnitude
         alp_dis.append(np.sqrt(displacement[0]**2 + displacement[1]**2 + displacement[2]**2))
         alp_dz.append(displacement[2])
+    
+    #get vertex distances in z
+    vertex_z = []
+    for v in vertices:
+        vertex_z.append(v[2])
 
         #check that displacement in z makes sense
     processes = ['prima', 'pf']
@@ -110,8 +116,16 @@ def main(args):
     
 
     produced = sig_yield[int(args.mass)][0] * xsec_factor
-    fig, ax1 = plt.subplots()
+    
 
+
+#Using actual displacements
+    fig, ax = plt.subplots()
+    ax.hist(vertex_z)
+    plt.show()
+    fig.savefig(f'./decay/dis2_prima_{args.mass}')
+
+    fig, ax1 = plt.subplots()
 # Plot the first graph with ax1
     ax1.plot(couplings, coup_d_med, color='blue', label='Median displacement')
     #ax1.axhline(y=1000)
@@ -226,7 +240,7 @@ def main(args):
     
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("--fullfilename", help="full filename with path", default="/Users/nathanjay/Desktop/SURF/ALP-8GeV/displaced/DP_m10_prima.lhe")
+    parser.add_argument("--fullfilename", help="full filename with path", default="/Users/nathanjay/Desktop/SURF/ALP-8GeV/Displaced_v2/DP2_m100_prima.lhe")
     parser.add_argument("--process", help="Primakoff or Photon Fusion")
     parser.add_argument("--mass", help="ALP mass")
     args = parser.parse_args()
