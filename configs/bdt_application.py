@@ -19,14 +19,21 @@ from sklearn.model_selection import StratifiedKFold, KFold, train_test_split
 
 def main(args):
 
-    with uproot.open(f"ALP_m{args.mass}_{args.process}_ntuple.root") as f:
+    with uproot.open(f"ALP_DP2_m{args.mass}_{args.process}_ntuple.root") as f:
         signal = f['Features'].arrays(library='pd')
         num_signal = len(signal)
 
     with uproot.open("ALP_m__PN_ntuple.root") as f:
         bkgd = f['Features'].arrays(library='pd')
 
-
+    processes = ['prima']
+    chosen_coup = {'processes' : processes }
+    chosen_coup[50] = 1e-4
+    chosen_coup[100] = 1.6e-5
+    chosen_coup[200] = 1.8e-5
+    chosen_coup[300] = 2.1e-5
+    chosen_coup[400] = 2.7e-5
+    chosen_coup[500] = 3.1e-5
 
 
     #assigning labels
@@ -176,7 +183,7 @@ def main(args):
     plt.figure()
 
     # Plot signal histogram with error bars
-    plt.bar(bin_centers, sig_hist, width=bin_width, edgecolor='midnightblue', alpha=0.2, label=f'm{args.mass}_{args.process}_signal',  error_kw=dict(ecolor='black', capsize=3))
+    plt.bar(bin_centers, sig_hist, width=bin_width, edgecolor='midnightblue', alpha=0.2, label=f'DP_m{args.mass}_{args.process}_signal',  error_kw=dict(ecolor='black', capsize=3))
 
     # Plot background histogram with error bars
     plt.bar(bin_centers, bkgd_hist, width=bin_width, edgecolor='firebrick', alpha=0.2, label='background',  error_kw=dict(ecolor='black', capsize=3))
@@ -185,8 +192,9 @@ def main(args):
     plt.ylabel('Density', fontsize=12)
     plt.axvline(optimal_threshold, color='y', linestyle='--', label=f'Optimal Thresh: {optimal_threshold:.2f}')
     plt.yscale('log')
+    plt.title(f"{args.mass} MeV, NHits at coupling: {chosen_coup[int(args.mass)]}")
     plt.legend(frameon=False)
-    plt.savefig(f'./bdt_output/m{args.mass}{args.process}/testing_{args.mass}_{args.process}')
+    plt.savefig(f'./bdt_output/m{args.mass}{args.process}/DP2_testing_{args.mass}_{args.process}')
 
 
     #cut efficiencies
@@ -200,7 +208,7 @@ def main(args):
     plt.title('Signal vs. Background Efficiency Curve')
     plt.legend()
     plt.grid(True)
-    plt.savefig(f'./bdt_output/m{args.mass}{args.process}/eff_{args.mass}_{args.process}')   
+    plt.savefig(f'./bdt_output/m{args.mass}{args.process}/DP2_eff_{args.mass}_{args.process}')   
 
 
 

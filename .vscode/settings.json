@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "TMVAClassificationApplication.C": "cpp",
-        "TMVAClassification.C": "cpp"
+        "TMVAClassification.C": "cpp",
+        "*.ipp": "cpp"
     }
 }

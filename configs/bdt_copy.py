@@ -81,7 +81,7 @@ def main(args):
 
     for fold in range(1):
 
-        #sampling 1000 events from each type
+        #sampling 10000 events from each type
         sampled_signal = signal_data.sample(n=10000, random_state=42 + fold, replace=False).reset_index(drop=True)
         sampled_background = background_data.sample(n=10000, random_state=42 + fold, replace=False).reset_index(drop=True)
 

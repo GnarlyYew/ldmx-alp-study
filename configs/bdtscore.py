@@ -26,7 +26,7 @@ from sklearn.model_selection import StratifiedKFold, KFold, train_test_split
 
 
 def main(args):
-    with uproot.open(f"ALP_m{args.mass}_{args.process}_ntuple.root") as f:
+    with uproot.open(f"ALP_DP2_m{args.mass}_{args.process}_ntuple.root") as f:
         signal = f['Features'].arrays(library='pd')
         num_signal = len(signal)
 
@@ -38,7 +38,7 @@ def main(args):
     #old = ofile.Get("Features")
 
     
-    nfile = TFile('ALP_m'+str(args.mass)+'_'+str(args.process)+'_scored_ntuple.root', 'RECREATE')
+    nfile = TFile('ALP_DP_m'+str(args.mass)+'_'+str(args.process)+'_scored_ntuple.root', 'RECREATE')
     ntree = TTree('Features', 'Features of test set')
     #new = old.CloneTree(0)
     
