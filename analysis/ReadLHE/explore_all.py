@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import argparse
 
-path = "/Users/nathanjay/Desktop/SURF/ALP-8GeV/displaced/"
+path = "/Users/nathanjay/Desktop/SURF/ALP-8GeV/all/"
 
 def main(args):
     pts = []
@@ -19,6 +19,8 @@ def main(args):
     e_angles = []
     e_energies = []
     alp_pzs = []
+    alp_pxs = []
+    alp_pys = []
 
     for i, data in enumerate(args.fullfilename):
     
@@ -73,10 +75,15 @@ def main(args):
 
         
         alp_e = []
+        alp_px = []
+        alp_py = []
         alp_pz = []
+
         for a in ALPs:
             alp_e.append(a.p4.E())
             alp_pz.append(a.pz)
+            alp_px.append(a.px)
+            alp_py.append(a.py)
         
         pts.append(pt)
         pzs.append(pz)
@@ -88,12 +95,62 @@ def main(args):
         e_angles.append(e_angle)
 
         alp_pzs.append(alp_pz)
+        alp_pxs.append(alp_px)
+        alp_pys.append(alp_py)
 
         e_mean = np.mean(alp_e)
         mean_energies.append(e_mean)
 
         angle_mean = np.mean(angle)
         mean_angles.append(angle_mean)
+
+
+
+    #ALP MOmenta
+    fig, ax = plt.subplots(1,1)
+    for i, data in enumerate(alp_pxs):
+
+        plt.title(f"{args.process} ALP $p_x$")
+        n, bins, patches = ax.hist(alp_pxs[i],
+                                    bins = 60,
+                                    range = (-0.5 * np.pi, 0.5 * np.pi),
+                                   histtype = 'step',
+                                   label=str(args.fullfilename[i]))
+    plt.legend()
+    ax.set_yscale('log')
+    ax.set_ylabel('events per bin')
+    ax.set_xlabel('$p_x$ of ALP [GeV/c]')
+    fig.savefig(f'./momenta/alp_px_{args.process}.pdf')
+
+    fig, ax = plt.subplots(1,1)
+    for i, data in enumerate(alp_pys):
+
+        plt.title(f"{args.process} ALP $p_y$")
+        n, bins, patches = ax.hist(alp_pys[i],
+                                    bins = 60,
+                                    range = (-0.5 * np.pi, 0.5 * np.pi),
+                                   histtype = 'step',
+                                   label=str(args.fullfilename[i]))
+    plt.legend()
+    ax.set_yscale('log')
+    ax.set_ylabel('events per bin')
+    ax.set_xlabel('$p_y$ of ALP [GeV/c]')
+    fig.savefig(f'./momenta/alp_py_{args.process}.pdf')
+
+    fig, ax = plt.subplots(1,1)
+    for i, data in enumerate(alp_pzs):
+
+        plt.title(f"{args.process} ALP $p_z$")
+        n, bins, patches = ax.hist(alp_pzs[i],
+                                    bins = 60,
+                                    range = (-0.5 * np.pi, 0.5 * np.pi),
+                                   histtype = 'step',
+                                   label=str(args.fullfilename[i]))
+    plt.legend()
+    ax.set_yscale('log')
+    ax.set_ylabel('events per bin')
+    ax.set_xlabel('$p_z$ of ALP [GeV/c]')
+    fig.savefig(f'./momenta/alp_pz_{args.process}.pdf')
 
     #Photon momentum
     fig, ax = plt.subplots(1,1)
@@ -245,7 +302,7 @@ if __name__ == '__main__':
     processes = ["prima"]
     for process in processes:
         for mass in masses:
-            files.append(f'DP_m{mass}_{process}.lhe')
+            files.append(f'm{mass}_{process}.lhe')
     
     parser.add_argument("--fullfilename", help="full filename with path", default=files)
     parser.add_argument("--process", help="Primakoff or Photon Fusion")
