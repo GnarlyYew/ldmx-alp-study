@@ -48,7 +48,7 @@ class GetPart:
 
 
     def loop(self):
-        f = TFile('ALP_DP2_m'+str(self.mass)+'_'+self.label+'_ntuple.root', 'RECREATE')
+        f = TFile('ALP_DP2_m'+str(self.mass)+'_'+self.label+'3_ntuple.root', 'RECREATE')
         Features = TTree( 'Features', 'Information about events' )
 
         NHits = array('f',[0])
@@ -59,14 +59,14 @@ class GetPart:
         Features.Branch("ZAverage_w",  ZAverage_w,  'ZAverage_w/F')
 
 #        print('hello')
-#        Ys = ROOT.std.vector('float')()
-#        Features.Branch("Ys", Ys)
-#       Xs = ROOT.std.vector('float')()
-#        Features.Branch("Xs", Xs)
-#        Zs = ROOT.std.vector('float')()
-#        Features.Branch('Zs', Zs)
-#        Es = ROOT.std.vector('float')()
- #       Features.Branch("Es", Es)
+        Ys = ROOT.std.vector('float')()
+        Features.Branch("Ys", Ys)
+        Xs = ROOT.std.vector('float')()
+        Features.Branch("Xs", Xs)
+        Zs = ROOT.std.vector('float')()
+        Features.Branch('Zs', Zs)
+        Es = ROOT.std.vector('float')()
+        Features.Branch("Es", Es)
  #       print('b')
         ZWidth_w = array('f',[0])
         Features.Branch("ZWidth_w",  ZWidth_w,  'ZWidth_w/F')
@@ -176,10 +176,10 @@ class GetPart:
             weights = []
 
 
- #           Xs.clear()
- #           Ys.clear()
- #           Zs.clear()
- #           Es.clear()
+            Xs.clear()
+            Ys.clear()
+            Zs.clear()
+            Es.clear()
 
             #ecal reset
             e_NHits[0] = 0
@@ -218,9 +218,7 @@ class GetPart:
                 x_positions.append(hit.getXPos())
                 y_positions.append(hit.getYPos())
                 z_positions.append(hit.getZPos())
-#                all_x.append(hit.getXPos())
-#                all_y.append(hit.getYPos())
-#                all_z.append(hit.getZPos())
+
                 sumE += hit.getEnergy()
             
             #ecal collection
@@ -274,10 +272,10 @@ class GetPart:
                 distance = math.sqrt(x_positions[p]*x_positions[p] + y_positions[p]*y_positions[p])
                 distances.append(distance)
                 weighted_dist.append(distance*energies[p]/sumE)
-   #             Xs.push_back(x_positions[p])
-  #              Ys.push_back(y_positions[p])
-   #             Zs.push_back(z_positions[p])
-    #            Es.push_back(energies[p])
+                Xs.push_back(x_positions[p])
+                Ys.push_back(y_positions[p])
+                Zs.push_back(z_positions[p])
+                Es.push_back(energies[p])
 
             if e_sumE != 0:
                 for p,q in enumerate(e_x_positions):

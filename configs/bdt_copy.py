@@ -19,7 +19,7 @@ from sklearn.model_selection import StratifiedKFold, KFold, train_test_split
 nbins = 100
 #load the data
 def main(args):
-    with uproot.open(f"ALP_m{args.mass}_{args.process}_ntuple.root") as f:
+    with uproot.open(f"ALP_DP2_m{args.mass}_{args.process}_ntuple.root") as f:
         signal = f['Features'].arrays(library='pd')
 
     with uproot.open("ALP_m__PN_ntuple.root") as f:
@@ -82,8 +82,8 @@ def main(args):
     for fold in range(1):
 
         #sampling 10000 events from each type
-        sampled_signal = signal_data.sample(n=10000, random_state=42 + fold, replace=False).reset_index(drop=True)
-        sampled_background = background_data.sample(n=10000, random_state=42 + fold, replace=False).reset_index(drop=True)
+        sampled_signal = signal_data.sample(n=30000, random_state=42 + fold, replace=False).reset_index(drop=True)
+        sampled_background = background_data.sample(n=30000, random_state=42 + fold, replace=False).reset_index(drop=True)
 
         # Combine the samples
         sampled_data = pd.concat([sampled_signal, sampled_background]).reset_index(drop=True)
