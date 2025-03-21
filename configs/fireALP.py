@@ -20,8 +20,8 @@ from LDMX.Ecal import vetos as ecal_veto
 
 # edit these for each run:
 filepath = "/Users/nathanjay/Desktop/SURF/ALP-8GeV/Displaced_v2/"
-infilename = "DP2_m200_prima.lhe"
-outfilename = "ALP_DP2_m200_prima_reco_3.root"
+infilename = "DP2_m500_prima.lhe"
+outfilename = "ALP_DP2_m500_prima_reco_6.root"
 nevents = 5000
 
 #from LDMX.Tools.HgcrocEmulator import HgcrocEmulator

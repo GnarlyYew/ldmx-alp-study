@@ -48,7 +48,7 @@ class GetPart:
 
 
     def loop(self):
-        f = TFile('ALP_DP2_m'+str(self.mass)+'_'+self.label+'3_ntuple.root', 'RECREATE')
+        f = TFile('ALP_DP2_m'+str(self.mass)+'_'+self.label+'6_ntuple.root', 'RECREATE')
         Features = TTree( 'Features', 'Information about events' )
 
         NHits = array('f',[0])
