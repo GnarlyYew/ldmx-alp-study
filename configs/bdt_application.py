@@ -19,7 +19,7 @@ from sklearn.model_selection import StratifiedKFold, KFold, train_test_split
 
 def main(args):
 
-    with uproot.open(f"ALP_DP2_m{args.mass}_{args.process}_ntuple.root") as f:
+    with uproot.open(f"ALP_DP2_m{args.mass}_{args.process}4_ntuple.root") as f:
         signal = f['Features'].arrays(library='pd')
         num_signal = len(signal)
 
@@ -29,9 +29,9 @@ def main(args):
     processes = ['prima']
     chosen_coup = {'processes' : processes }
     chosen_coup[50] = 1e-4
-    chosen_coup[100] = 1.6e-5
+    chosen_coup[100] = 2e-5
     chosen_coup[200] = 1.8e-5
-    chosen_coup[300] = 2.1e-5
+    chosen_coup[300] = 2e-5
     chosen_coup[400] = 2.7e-5
     chosen_coup[500] = 3.1e-5
 
@@ -53,7 +53,7 @@ def main(args):
     features = data.columns
     features = features.drop(['ZAv','XYAv','XYWidth',  'isSignal',
                               'e_NHits', 'e_ZLength', 'e_ZAverage_w', 'e_ZWidth_w', 'e_ZAv',
-                              'e_ZWidth', 'e_XYAv', 'e_XYAv_w', 'e_XYWidth', 'e_XYWidth_w', 'e_EDensity', 'e_Eav', 'Label'])
+                              'e_ZWidth', 'e_XYAv', 'e_XYAv_w', 'e_XYWidth', 'e_XYWidth_w', 'e_EDensity', 'e_Eav', 'Label', 'Xs', 'Ys', 'Zs', 'Es'])
 
     data = pd.concat([bkgd, signal], ignore_index=True)
 
